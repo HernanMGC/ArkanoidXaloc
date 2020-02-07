@@ -46,26 +46,32 @@ public class CharacterMovement : MonoBehaviour
         RaycastHit2D hitLeft = Physics2D.Raycast(this.transform.position, Vector2.left, Mathf.Infinity);
         RaycastHit2D hitRight = Physics2D.Raycast(this.transform.position, Vector2.right, Mathf.Infinity);
         float characterOffset = this.characterCollider.size.x / 2;
+        float spriteWidth = this.GetComponent<SpriteRenderer>().bounds.size.x;
+        float colliderWidthX = this.GetComponent<BoxCollider2D>().size.x;
+        float colliderOffsetX = this.GetComponent<BoxCollider2D>().offset.x;
+        Debug.Log("spriteWidth " + spriteWidth);
+        Debug.Log("colliderWidthX " + colliderWidthX);
+        Debug.Log("colliderOffsetX " + colliderOffsetX);
 
         if (hitLeft.transform != null)
         {
-            this.boundaryLeft = hitLeft.transform.position.x + characterOffset;
+            this.boundaryLeft = hitLeft.point.x + spriteWidth/2;
+            if (colliderOffsetX > 0) {
+                this.boundaryLeft += colliderOffsetX * 2;
+            }
             Debug.Log("B Left " + this.boundaryLeft);
-            Debug.Log("B Left.X " + hitLeft.transform.position.x);
-        }
-        else {
-            Debug.Log("DANG!" + this.boundaryLeft);
+            Debug.Log("B Left.X " + hitLeft.point.x);
         }
 
         if (hitRight.transform != null)
         {
-            this.boundaryRight = hitRight.transform.position.x - characterOffset;
+            this.boundaryRight = hitRight.point.x - spriteWidth/2;
+            if (colliderOffsetX < 0)
+            {
+                this.boundaryRight -= colliderOffsetX * 2;
+            }
             Debug.Log("B Right" + this.boundaryRight);
-            Debug.Log("B Right.X " + hitRight.transform.position.x);
-        }
-        else
-        {
-            Debug.Log("DANG2!" + this.boundaryRight);
+            Debug.Log("B Right.X " + hitRight.point.x);
         }
 
         //this.boundaryLeft = -0.6f;
