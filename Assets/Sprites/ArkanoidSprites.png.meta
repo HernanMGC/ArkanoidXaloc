@@ -86,6 +86,18 @@ TextureImporter:
   - first:
       213: -4167315565416437475
     second: ArkanoidSprites_27
+  - first:
+      213: 3599151420269259957
+    second: ArkanoidSprites_28
+  - first:
+      213: -710970084345600268
+    second: ArkanoidSprites_29
+  - first:
+      213: -1607828776965675245
+    second: ArkanoidSprites_30
+  - first:
+      213: 7918437772099331302
+    second: ArkanoidSprites_31
   externalObjects: {}
   serializedVersion: 9
   mipmaps:
@@ -796,7 +808,7 @@ TextureImporter:
         width: 9
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -817,7 +829,7 @@ TextureImporter:
         width: 16
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -825,6 +837,90 @@ TextureImporter:
       bones: []
       spriteID: 678197e6a7d3c6a4e85d89c5631e6bcb
       internalID: -4167315565416437475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArkanoidSprites_28
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 80
+        width: 22
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc2f1e4afd55dc240801657632ef99df
+      internalID: 3599151420269259957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArkanoidSprites_29
+      rect:
+        serializedVersion: 2
+        x: 361
+        y: 80
+        width: 22
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 731e9b627a970394e973ef897312da60
+      internalID: -710970084345600268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArkanoidSprites_30
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 80
+        width: 22
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c827c4a534bdef4d90b86e01c2c393f
+      internalID: -1607828776965675245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArkanoidSprites_31
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 80
+        width: 22
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d730de0728bd6204ab64fca3635cbb91
+      internalID: 7918437772099331302
       vertices: []
       indices: 
       edges: []

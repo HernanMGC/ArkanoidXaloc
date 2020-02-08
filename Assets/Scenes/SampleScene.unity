@@ -2348,12 +2348,12 @@ PrefabInstance:
     - target: {fileID: 6169830985868904480, guid: 13c4b6afe62ac7043bc55b4f7fd9a8ec,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.036
       objectReference: {fileID: 0}
     - target: {fileID: 6169830985868904480, guid: 13c4b6afe62ac7043bc55b4f7fd9a8ec,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.923
+      value: -0.139
       objectReference: {fileID: 0}
     - target: {fileID: 6169830985868904480, guid: 13c4b6afe62ac7043bc55b4f7fd9a8ec,
         type: 3}
@@ -2892,6 +2892,14 @@ MonoBehaviour:
   - {fileID: 6954044917489596573, guid: 4e1e8ab5b90fd8c4c8df0edf5e4c3790, type: 3}
   unbreakableBrickPic: {fileID: -6762660225396438451, guid: 4e1e8ab5b90fd8c4c8df0edf5e4c3790,
     type: 3}
+  capsuleDropProbability: 0.5
+  capsulePrizes:
+  - capsule: {fileID: 5342873958805380051, guid: b4b0299eb2473c34692b865991ac978d,
+      type: 3}
+    capsuleWeight: 5
+  - capsule: {fileID: 5508464086674467748, guid: c24221e70f555ef4d993fd00ef25aa50,
+      type: 3}
+    capsuleWeight: 5
 --- !u!4 &1849404980
 Transform:
   m_ObjectHideFlags: 0
@@ -3652,7 +3660,7 @@ PrefabInstance:
     - target: {fileID: 165011076580260860, guid: 1c17cd6197a5fdb41a3f26e67dc1d253,
         type: 3}
       propertyPath: m_Name
-      value: Character
+      value: Racket
       objectReference: {fileID: 0}
     - target: {fileID: 165011076580260861, guid: 1c17cd6197a5fdb41a3f26e67dc1d253,
         type: 3}
