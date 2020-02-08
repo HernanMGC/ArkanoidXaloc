@@ -5,16 +5,9 @@ using UnityEngine;
 public class BallMovement : MonoBehaviour
 {
     private Vector2 currentSpeed;
+    private GameObject previousHitted = null;
 
     public Vector2 iniSpeed;
-    private void Bounce(Vector2 collisionNormal)
-    {
-        var speed = this.currentSpeed.magnitude;
-        var direction = Vector2.Reflect(currentSpeed.normalized, collisionNormal);
-
-        Debug.Log("Out Direction: " + direction);
-        this.currentSpeed = direction * speed;
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -26,15 +19,26 @@ public class BallMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 currentPosition = new Vector2(this.transform.position.x, this.transform.position.y);
         Vector2 newRelativePosition = this.currentSpeed * Time.fixedDeltaTime;
-        this.transform.Translate(newRelativePosition.x, newRelativePosition.y, 0.0f);
+        this.transform.position = new Vector3 (this.transform.position.x + newRelativePosition.x, this.transform.position.y + newRelativePosition.y, 0.0f);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("CollisionEntered");
+        
+        GameObject go = collision.gameObject;
         Bounce(collision.contacts[0].normal);
+
+        if (go.GetComponent<Hitable>() != null)
+        {
+            go.GetComponent<Hitable>().Hit(this.gameObject);
+            Debug.Log("CollisionEntered " + go.GetComponent<Hitable>().hitableReaction);
+
+        }
+
+        this.previousHitted = go;
+
+
     }
     private void ResetSpeed()
     {
@@ -43,4 +47,12 @@ public class BallMovement : MonoBehaviour
         return;
     }
 
+    private void Bounce(Vector2 collisionNormal)
+    {
+        var speed = this.currentSpeed.magnitude;
+        var direction = Vector2.Reflect(currentSpeed.normalized, collisionNormal);
+
+        Debug.Log("Out Direction: " + direction);
+        this.currentSpeed = direction * speed;
+    }
 }
