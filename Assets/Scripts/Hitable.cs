@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hitable : MonoBehaviour
+public abstract class Hitable : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [System.Serializable]
+    public enum HitableReaction
     {
-        
+        DamageSelf,
+        DestroySelf,
+        DestroyHitter,
+        DoNothing,
+        AttachHitter
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public HitableReaction hitableReaction;
+
+    public virtual void Hit(GameObject go) { }
 }
