@@ -8,19 +8,10 @@ public class Brick : Hitable
     public int durability;
     public GameObject gameManager;
 
-    public void Start() {
+    private void OnEnable()
+    {
         brickTransform = this.transform;
         this.gameManager = GameObject.FindWithTag("GameController");        
-
-        if (this.hitableReaction == HitableReaction.DamageSelf)
-        {
-            Sprite[] breakableBrickPics = gameManager.GetComponent<GameManager>().breakableBrickPics;
-            this.GetComponent<SpriteRenderer>().sprite = breakableBrickPics[Mathf.Min(this.durability-1, breakableBrickPics.Length-1)];
-
-        } else if (this.hitableReaction == HitableReaction.DoNothing) {
-            Sprite unbreakableBrickPic = gameManager.GetComponent<GameManager>().unbreakableBrickPic;
-            this.GetComponent<SpriteRenderer>().sprite = unbreakableBrickPic;
-        }
     }
 
     public override void Hit(GameObject go) {

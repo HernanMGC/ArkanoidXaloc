@@ -21,14 +21,14 @@ public class BallMovement : MonoBehaviour
     void FixedUpdate()
     {
         Vector2 newRelativePosition = this.currentSpeed * Time.fixedDeltaTime;
-        this.transform.position = new Vector3 (this.transform.position.x + newRelativePosition.x, this.transform.position.y + newRelativePosition.y, 0.0f);
+        this.transform.Translate(newRelativePosition.x, newRelativePosition.y, 0.0f);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         
         GameObject go = collision.gameObject;
-        Bounce(collision.contacts[0].normal);
+        Bounce(collision);
 
         if (go.GetComponent<Hitable>() != null)
         {
@@ -37,9 +37,19 @@ public class BallMovement : MonoBehaviour
         }
 
         this.previousHitted = go;
-
-
     }
+
+    float hitFactor(Vector2 ballPos, Vector2 racketPos,
+                float racketWidth)
+    {
+        // ascii art:
+        //
+        // 1  -0.5  0  0.5   1  <- x value
+        // ===================  <- racket
+        //
+        return (ballPos.x - racketPos.x) / racketWidth;
+    }
+
     private void ResetSpeed()
     {
         this.currentSpeed = this.iniSpeed;
@@ -47,10 +57,20 @@ public class BallMovement : MonoBehaviour
         return;
     }
 
-    private void Bounce(Vector2 collisionNormal)
+    private void Bounce(Collision2D collision)
     {
+
         var speed = this.currentSpeed.magnitude;
-        var direction = Vector2.Reflect(currentSpeed.normalized, collisionNormal);
+        var direction = Vector2.Reflect(currentSpeed.normalized, collision.contacts[0].normal);
+
+
+
+        if (collision.gameObject.tag == "Player")
+        {
+            float x = hitFactor(transform.position, collision.collider.transform.position, collision.collider.bounds.size.x);
+            direction.x = x;
+        }
+
 
         this.currentSpeed = direction * speed;
     }

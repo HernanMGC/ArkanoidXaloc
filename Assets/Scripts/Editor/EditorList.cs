@@ -11,7 +11,7 @@ public static class EditorList
 
     private static GUILayoutOption miniButtonWidth = GUILayout.Width(20f);
 
-    public static void Show(SerializedProperty list, EditorListOption options = EditorListOption.Default)
+    public static void Show(SerializedProperty list, EditorListOption options = EditorListOption.Default, string helpBox = "")
     {
         if (!list.isArray)
         {
@@ -27,6 +27,12 @@ public static class EditorList
             EditorGUILayout.PropertyField(list);
             EditorGUI.indentLevel += 1;
         }
+
+        if (helpBox.Length > 0)
+        {
+            EditorGUILayout.HelpBox(helpBox, MessageType.Info);
+        }
+
         if (!showListLabel || list.isExpanded)
         {
             if (showListSize)
