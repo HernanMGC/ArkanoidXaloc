@@ -26,7 +26,7 @@ public class BallMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (canMove)
+        if (this.canMove)
         {
             Vector2 newRelativePosition = this.currentSpeed * Time.fixedDeltaTime;
             this.transform.Translate(newRelativePosition.x, newRelativePosition.y, 0.0f);
@@ -125,7 +125,8 @@ public class BallMovement : MonoBehaviour
     {
         this.currentSpeed = this.currentSpeed * 1 / (1f + this.incrementStep);
     }
-    private void SetMove(bool moveState)
+
+    public void SetMove(bool moveState)
     {
         this.canMove = moveState;
     }

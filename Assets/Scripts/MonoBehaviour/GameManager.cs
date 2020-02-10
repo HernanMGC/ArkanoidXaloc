@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
     private bool gameOver = true;
     private int currentLifes;
     private int currentScore = 0;
+    private bool isLevelChanging = false;
 
     [Header("Player Settings")]
     public BallMovement ball;
@@ -48,9 +49,11 @@ public class GameManager : MonoBehaviour {
     {
         if (this.remainingBricks <= 0 && !this.gameOver && this.currentLevel + 1 < this.arkanoidLevels.Length)
         {
-            this.currentLevel++;
-            this.InitializeLevel(currentLevel);
-            this.UpdateLevelGUI();
+            if (!isLevelChanging)
+            {
+                this.currentLevel++;
+                StartCoroutine(InitializeLevelCoroutine(1, this.currentLevel));
+            }
         }
     }
 
@@ -78,11 +81,34 @@ public class GameManager : MonoBehaviour {
         this.ResetBall();
     }
 
+    IEnumerator ShowLevelMessageGUICoroutine(float seconds)
+    {
+        this.PauseGame();
+        this.ShowLevelMessageGUI();
+
+        yield return new WaitForSeconds(seconds);
+
+        this.HideLevelMessageGUI();
+        this.ResumeGame();
+
+    }
+
+    IEnumerator InitializeLevelCoroutine(float seconds, int level)
+    {
+        this.isLevelChanging = true;
+        this.PauseGame();
+
+        yield return new WaitForSeconds(seconds);
+
+        this.InitializeLevel(level);
+        this.UpdateLevelGUI();
+        this.isLevelChanging = false;
+    }
+
     public void BrickDestroyed(Transform brickTransform, int durability) {
         this.remainingBricks--;
         this.currentScore += 100 * durability;
         this.UpdateScoreGUI();
-        Debug.Log(currentScore);
         if (UnityEngine.Random.Range(0f, 1f) < capsuleDropProbability)
         {
             int weightSum = 0;
@@ -130,6 +156,10 @@ public class GameManager : MonoBehaviour {
         }
 
         this.remainingBricks = this.bricksPerLevel[levelNumber];
+
+        
+
+        StartCoroutine(ShowLevelMessageGUICoroutine(1));
     }
 
     private void InstantiateBrick(char brickChar, Vector3 position, int levelNumber, GameObject parent) {
@@ -222,6 +252,23 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    private void ShowLevelMessageGUI()
+    {
+        GameObject messageGroup = this.canvas.gameObject.transform.Find("Message").gameObject;
+        GameObject message = messageGroup.transform.Find("MessageValue").gameObject;
+
+        message.GetComponent<TMPro.TextMeshProUGUI>().text = "Welcome to\nLevel " + (this.currentLevel + 1);
+        messageGroup.SetActive(true);
+    }
+
+    private void HideLevelMessageGUI()
+    {
+        GameObject messageGroup = this.canvas.gameObject.transform.Find("Message").gameObject;
+        GameObject message = messageGroup.transform.Find("MessageValue").gameObject;
+
+        messageGroup.SetActive(false);
+    }
+
     private void CleanBricks()
     {
         Brick[] bricks = GameObject.FindObjectsOfType(typeof(Brick)) as Brick[];
@@ -255,5 +302,19 @@ public class GameManager : MonoBehaviour {
         this.CleanCapsules();
         this.ResetRacket();
         this.ResetBall();
+    }
+
+    private void ResumeGame() {
+        this.racket.GetComponent<CharacterMovement>().SetMove(true);
+        if (this.ball.gameObject.transform.parent == null)
+        {
+            this.ball.GetComponent<BallMovement>().SetMove(true);
+        }
+    }
+
+    private void PauseGame()
+    {
+        this.racket.GetComponent<CharacterMovement>().SetMove(false);
+        this.ball.GetComponent<BallMovement>().SetMove(false);
     }
 }
