@@ -35,7 +35,6 @@ public class BallMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("!");
         GameObject go = collision.gameObject;
         Bounce(collision);
 
@@ -50,7 +49,6 @@ public class BallMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        Debug.Log("DISABLED");
         this.gameManager.LifeLost();
     }
 
@@ -120,13 +118,11 @@ public class BallMovement : MonoBehaviour
 
     public void IncrementSpeed()
     {
-        Debug.Log("Ball speed incremented!");
         this.currentSpeed = this.currentSpeed * (1f + this.incrementStep);
     }
 
     public void DecrementSpeed()
     {
-        Debug.Log("Ball speed decremented!");
         this.currentSpeed = this.currentSpeed * 1 / (1f + this.incrementStep);
     }
     private void SetMove(bool moveState)
@@ -136,7 +132,6 @@ public class BallMovement : MonoBehaviour
 
     public void ResetBall()
     {
-        Debug.Log("ResetBall");
         this.SetMove(false);
         this.ResetSpeed();
         this.ResetPosition();

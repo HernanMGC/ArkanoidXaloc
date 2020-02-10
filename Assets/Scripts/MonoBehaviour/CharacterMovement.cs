@@ -48,7 +48,7 @@ public class CharacterMovement : MonoBehaviour
         return;
     }
 
-    private void InitializeBoundaries()
+    public void InitializeBoundaries()
     {
         RaycastHit2D hitLeft = Physics2D.Raycast(this.transform.position, Vector2.left, Mathf.Infinity);
         RaycastHit2D hitRight = Physics2D.Raycast(this.transform.position, Vector2.right, Mathf.Infinity);
