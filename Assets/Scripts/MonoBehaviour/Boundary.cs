@@ -13,7 +13,13 @@ public class Boundary : Hitable
                 break;
 
             case HitableReaction.DestroyHitter:
-                Destroy(go);
+                if (go.GetComponent<BallMovement>() != null) {
+                    go.SetActive(false);
+                }
+                else
+                {
+                    Destroy(go);
+                }
                 break;
 
             case HitableReaction.DoNothing:

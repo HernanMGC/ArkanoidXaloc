@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class CharacterMovement : MonoBehaviour
     private BoxCollider2D characterCollider;
 
     public Vector2 iniSpeed;
+    public GameObject ball;
 
     // Start is called before the first frame update
     void Start()
@@ -28,10 +30,15 @@ public class CharacterMovement : MonoBehaviour
     {
         // Get Horizontal Input
         float hMove = Input.GetAxisRaw("Horizontal");
-        
+
         Vector2 currentPosition = new Vector2(Mathf.Clamp(this.transform.position.x, boundaryLeft, boundaryRight), this.transform.position.y);
         Vector2 newPosition = currentPosition + this.currentSpeed * hMove * Time.fixedDeltaTime;
         this.transform.position = newPosition;
+
+        if (Input.GetAxisRaw("Jump") > 0)
+        {
+            this.PlayBall();
+        }
     }
 
     private void ResetSpeed()
@@ -49,9 +56,6 @@ public class CharacterMovement : MonoBehaviour
         float spriteWidth = this.GetComponent<SpriteRenderer>().bounds.size.x;
         float colliderWidthX = this.GetComponent<BoxCollider2D>().size.x;
         float colliderOffsetX = this.GetComponent<BoxCollider2D>().offset.x;
-        Debug.Log("spriteWidth " + spriteWidth);
-        Debug.Log("colliderWidthX " + colliderWidthX);
-        Debug.Log("colliderOffsetX " + colliderOffsetX);
 
         if (hitLeft.transform != null)
         {
@@ -59,8 +63,6 @@ public class CharacterMovement : MonoBehaviour
             if (colliderOffsetX > 0) {
                 this.boundaryLeft += colliderOffsetX * 2;
             }
-            Debug.Log("B Left " + this.boundaryLeft);
-            Debug.Log("B Left.X " + hitLeft.point.x);
         }
 
         if (hitRight.transform != null)
@@ -70,13 +72,22 @@ public class CharacterMovement : MonoBehaviour
             {
                 this.boundaryRight -= colliderOffsetX * 2;
             }
-            Debug.Log("B Right" + this.boundaryRight);
-            Debug.Log("B Right.X " + hitRight.point.x);
         }
 
-        //this.boundaryLeft = -0.6f;
-        //this.boundaryRight = 0.6f;
-
         return;
+    }
+
+    internal void AttachBall(GameObject ball)
+    {
+        Debug.Log("AttachBall");
+        this.ball = ball;
+        
+        ball.transform.parent = this.gameObject.transform.Find("BallStartingPoint").transform;
+    }
+
+    internal void PlayBall()
+    {
+        this.ball.transform.parent = null;
+        this.ball.GetComponent<BallMovement>().PlayBall();
     }
 }

@@ -5,12 +5,15 @@ using UnityEngine;
 public class Brick : Hitable
 {
     private Transform brickTransform;
+    private int currentDurability;
+
     public int durability;
     public GameObject gameManager;
 
     private void OnEnable()
     {
-        brickTransform = this.transform;
+        this.brickTransform = this.transform;
+        this.currentDurability = this.durability;
         this.gameManager = GameObject.FindWithTag("GameController");        
     }
 
@@ -18,16 +21,16 @@ public class Brick : Hitable
         switch (this.hitableReaction)
         {
             case HitableReaction.DamageSelf:
-                durability--;
+                this.currentDurability--;
 
-                if (durability == 0) {
-                    this.gameManager.GetComponent<GameManager>().BrickDestroyed(brickTransform);
+                if (this.currentDurability == 0) {
+                    this.gameManager.GetComponent<GameManager>().BrickDestroyed(brickTransform, this.durability);
                     Destroy(this.gameObject);
                 }
                 break;
 
             case HitableReaction.DestroySelf:
-                this.gameManager.GetComponent<GameManager>().BrickDestroyed(brickTransform);
+                this.gameManager.GetComponent<GameManager>().BrickDestroyed(brickTransform, this.durability);
                 Destroy(this.gameObject);
             break;
 
@@ -48,7 +51,5 @@ public class Brick : Hitable
                 break;
         }
     }
-
- 
 }
 

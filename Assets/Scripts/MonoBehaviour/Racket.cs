@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Racket : Hitable
 {
+    public Vector3 initialPosition;
     public override void Hit(GameObject go)
     {
         switch (this.hitableReaction)
@@ -25,6 +27,11 @@ public class Racket : Hitable
             default:
                 break;
         }
+    }
+
+    internal void ResetRacket()
+    {
+        this.transform.position = initialPosition;
     }
 }
 
