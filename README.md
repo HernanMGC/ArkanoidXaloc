@@ -19,7 +19,7 @@ En esta prueba de programación se ha desarrollado un clon del juego Arkanoid en
 
 -   Cápsulas modificadoras de cuatro tipos: aumento y disminución de velocidad de bola, aumento y disminición del tamaño de la pala.
 
-El tiempo total dedicado ha sido aproximadamente de 8 horas. El detalle de el tiempo de desarrollo para cada parte puede verse en el siguiente desglose:
+El tiempo total dedicado ha sido aproximadamente de 9 horas. El detalle de el tiempo de desarrollo para cada parte puede verse en el siguiente desglose:
 
 -   **[Bola](#ball):** 0.5 horas.
 
