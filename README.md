@@ -21,17 +21,17 @@ En esta prueba de programación se ha desarrollado un clon del juego Arkanoid en
 
 El tiempo total dedicado ha sido aproximadamente de 8 horas. El detalle de el tiempo de desarrollo para cada parte puede verse en el siguiente desglose:
 
--   **[ball](Bola):** 0.5 horas.
+-   **[Bola](#ball):** 0.5 horas.
 
--   **[racket](Pala):** 0.5 horas.
+-   **[Pala](#racket):** 0.5 horas.
 
--   **[bricks](Ladrillos):** 1 hora.
+-   **[Ladrillos](#bricks):** 1 hora.
 
--   **[capsules](Cápsulas modificadoras) :** 1 hora.
+-   **[Cápsulas modificadoras](#capsules) :** 1 hora.
 
--   **[levels](Generador de niveles) :** 2 horas.
+-   **[Generador de niveles](#levels) :** 2 horas.
 
--   **[gamenager](GameManager):**
+-   **[GameManager](#gamenager):**
 
     -   **Flujo de juego:** 2 hora.
 
