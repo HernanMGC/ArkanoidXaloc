@@ -52,7 +52,7 @@ La bola mientras pueda moverse y su impacto con objetos no la destruya rebotará
 
 Adicionalmente, para aumentar el control de la bola por parte del jugador el impacto de la bola con la pala añade fuerza en la componente X del movimiento en función del punto de impacto con la la pala como puede verse en la imagen siguiente.
 
-![Impacto con la pala<span data-label="fig:racketImpact"></span>](racketImpact)
+![Impacto con la pala](/readmeImages/racketImpact.jpg)
 
 Pala {#sec:racket}
 ====
@@ -101,4 +101,4 @@ Se ha modificado el editor de este componente para poder pemitir una gestión m�
 
 Para cada elemento de una lista se permite duplicar, eliminar y desplazar hacia abajo.
 
-![Lista de `CapsulePrize`<span data-label="fig:editorList"></span>](editorList)
+![Lista de `CapsulePrize`>](/readmeImages/editorList.jpg)
