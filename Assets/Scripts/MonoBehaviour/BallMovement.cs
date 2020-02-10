@@ -1,32 +1,41 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BallMovement : MonoBehaviour
 {
-    public Vector2 currentSpeed;
     private GameObject previousHitted = null;
     private readonly float incrementStep = 1f;
+    private bool canMove = false;
+    private GameManager gameManager;
 
+    public Vector2 currentSpeed;
     public Vector2 iniSpeed;
+    public GameObject initPosition;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        this.ResetSpeed();
+        this.gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        this.ResetBall();
     }
 
     //Update is called once per frame
 
     void FixedUpdate()
     {
-        Vector2 newRelativePosition = this.currentSpeed * Time.fixedDeltaTime;
-        this.transform.Translate(newRelativePosition.x, newRelativePosition.y, 0.0f);
+        if (canMove)
+        {
+            Vector2 newRelativePosition = this.currentSpeed * Time.fixedDeltaTime;
+            this.transform.Translate(newRelativePosition.x, newRelativePosition.y, 0.0f);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        Debug.Log("!");
         GameObject go = collision.gameObject;
         Bounce(collision);
 
@@ -39,14 +48,15 @@ public class BallMovement : MonoBehaviour
         this.previousHitted = go;
     }
 
+    private void OnDisable()
+    {
+        Debug.Log("DISABLED");
+        this.gameManager.LifeLost();
+    }
+
     float hitFactor(Vector2 ballPos, Vector2 racketPos,
                 float racketWidth)
     {
-        // ascii art:
-        //
-        // 1  -0.5  0  0.5   1  <- x value
-        // ===================  <- racket
-        //
         return (ballPos.x - racketPos.x) / racketWidth;
     }
 
@@ -56,13 +66,46 @@ public class BallMovement : MonoBehaviour
 
         return;
     }
+    private void ResetPosition()
+    {
+        this.transform.position = this.initPosition.transform.position;
+
+        return;
+    }
 
     private void Bounce(Collision2D collision)
     {
 
         var speed = this.currentSpeed.magnitude;
-        var direction = Vector2.Reflect(currentSpeed.normalized, collision.contacts[0].normal);
+        Vector2 direction;
 
+
+        if (collision.gameObject.GetComponent<Brick>() != null)
+        {
+            direction = currentSpeed.normalized;
+
+            if (collision.gameObject.transform.position.y > this.gameObject.transform.position.y)
+            {
+                direction.y = Mathf.Abs(direction.y) * -1;
+            }
+            else
+            {
+                direction.y = Mathf.Abs(direction.y);
+            }
+
+            if (collision.gameObject.transform.position.x > this.gameObject.transform.position.x)
+            {
+                direction.x = Mathf.Abs(direction.x) * -1;
+            }
+            else
+            {
+                direction.x = Mathf.Abs(direction.x);
+            }
+        }
+        else
+        {
+            direction = Vector2.Reflect(currentSpeed.normalized, collision.contacts[0].normal);
+        }
 
 
         if (collision.gameObject.tag == "Player")
@@ -75,13 +118,33 @@ public class BallMovement : MonoBehaviour
         this.currentSpeed = direction * speed;
     }
 
-    public void IncrementSpeed() {
+    public void IncrementSpeed()
+    {
         Debug.Log("Ball speed incremented!");
         this.currentSpeed = this.currentSpeed * (1f + this.incrementStep);
     }
 
-    public void DecrementSpeed() {
+    public void DecrementSpeed()
+    {
         Debug.Log("Ball speed decremented!");
-        this.currentSpeed = this.currentSpeed * 1/(1f + this.incrementStep);
+        this.currentSpeed = this.currentSpeed * 1 / (1f + this.incrementStep);
+    }
+    private void SetMove(bool moveState)
+    {
+        this.canMove = moveState;
+    }
+
+    public void ResetBall()
+    {
+        Debug.Log("ResetBall");
+        this.SetMove(false);
+        this.ResetSpeed();
+        this.ResetPosition();
+        this.gameObject.SetActive(true);
+    }
+
+    public void PlayBall()
+    {
+        this.SetMove(true);
     }
 }

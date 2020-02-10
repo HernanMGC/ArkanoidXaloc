@@ -7,8 +7,10 @@ public class CapsulePrizeDrawer : PropertyDrawer
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         int oldIndentLevel = EditorGUI.indentLevel;
+
         label = EditorGUI.BeginProperty(position, label, property);
         Rect contentPosition = EditorGUI.PrefixLabel(position, label);
+
         if (position.height > 16f)
         {
             position.height = 16f;
