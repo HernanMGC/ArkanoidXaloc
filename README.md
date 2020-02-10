@@ -21,17 +21,19 @@ En esta prueba de programación se ha desarrollado un clon del juego Arkanoid en
 
 El tiempo total dedicado ha sido aproximadamente de 8 horas. El detalle de el tiempo de desarrollo para cada parte puede verse en el siguiente desglose:
 
--   0.5 horas.
+-   **[ball](Bola):** 0.5 horas.
 
--   0.5 horas.
+-   **[racket](Pala):** 0.5 horas.
 
--   1 hora.
+-   **[bricks](Ladrillos):** 1 hora.
 
--   1 hora.
+-   **[capsules](Cápsulas modificadoras) :** 1 hora.
 
--   2 horas.
+-   **[levels](Generador de niveles) :** 2 horas.
 
--   -   **Flujo de juego:** 2 hora.
+-   **[gamenager](GameManager):**
+
+    -   **Flujo de juego:** 2 hora.
 
     -   **Puntuaciones:** 0.5 horas.
 
@@ -41,7 +43,7 @@ El tiempo total dedicado ha sido aproximadamente de 8 horas. El detalle de el ti
 
 Puede encontrarse el código descargable en el siguiente repositorio: <https://github.com/HernanMGC/ArkanoidXaloc>.
 
-Bola {#sec:ball}
+<a name="ball"></a>Bola
 ====
 
 Para el desarrollo de la bola se ha creado un script llamado `BallMovement.cs` que controla su movimiento y su impacto con los impactos con aquellos GameObjects que tengan el script que herede de `Hitable.cs`. Dicho script permite definir las reacciones de un GameObject al recibir un impacto, consta de un atributo `public` de tipo `enum` para definir el tipo de reacción y una función `public virtual` `Hit`.
@@ -54,7 +56,7 @@ Adicionalmente, para aumentar el control de la bola por parte del jugador el imp
 
 ![Impacto con la pala](/readmeImages/racketImpact.jpg)
 
-Pala {#sec:racket}
+<a name="racket"></a>Pala
 ====
 
 Para el desarrollo de la pala se han creado dos scripts: uno llamado `CharacterMovement.cs`, encargado del movimiento de la pala y el lanzamiento de la bola, y otro llamado `Racket.cs` que hereda de `Hitable.cs`, encargado la gestión de colisiones y del efecto de las capsulas modificadoras.
@@ -63,19 +65,19 @@ El script encargado del movimiento de la pala establece mediante la función `In
 
 El script encargado de la pala como elemento de juego `Hitable` también se encarga del reseteo de posición de la pala y de la modificación en tamaño, tanto de `Sprite` como de `Collider`, por efecto de las cápsulas.
 
-Ladrillos {#sec:bricks}
+<a name="bricks"></a>Ladrillos
 =========
 
 Para el desarrollo de los ladrillos se ha creado un script llamado `Brick.js` que hereda de `Hitable.js`. En este caso, al ser destruido el objeto por recibir un golpe genera una llamada la función `BrickDestroyed` de `GameManager.js` lanzando los eventos de cambio en el juego: subida de puntuación, reducción del contador de ladrillos restantes para pasar el nivel y la posible generación de una cápsula modificadora.
 
-Cápsulas modificadoras {#sec:capsule}
+<a name="capsules"></a>Cápsulas modificadoras
 ======================
 
 Para el desarrollo de las cápsulas se ha creado un script llamado `Capsule.js` que define un función `public virtual` `ApplyEffect` que ha de ser implementada por los scripts que hereden de él. En esta entrega se han desarrollado cuatro tipos de cápsulas con cuatro efectos distintos y para cada ella se ha generado un `Prefab` con su sprite y aceleración de caída propia.
 
 Dentro del `GameManager` hay una sección de configuración de las cápsulas, donde puede definirse qué capsulas pueden a aparecer o no, cuál es la probabilidad de que aparezca una cápsula al romper un ladrillo y, en caso de aparecer alguna cápsula, qué peso tiene cada cápsula para aparecer.
 
-Generador de niveles {#sec:levelGenerator}
+<a name="levels"></a>Generador de niveles
 ====================
 
 Para el desarrollo de la generación y definición de niveles se ha añadido a `GameManager.js` una sección de configuración en la que mediante una lista de `TextAreas` pueden definirse cada uno de los niveles del juego. La forma de generar un nivel se base en al parseo del texto: cada línea del `TextArea` representa una línea de ladrillos, sólo se toman en cuenta los diez primeros caracteres de cada línea y en función del caracter usado se instancia un ladrillo de uno, dos o tres golpes, un ladrillo irrompible o nada.
@@ -92,7 +94,7 @@ La relación de caracteres y ladrillos es la siguiente:
 
 -   **Cualquier otro caracter:** Sin ladrillo.
 
-GameManager {#sec:gameFlow}
+<a name="gamenager"></a>GameManager
 ===========
 
 Todo la gestión de inicializaciones de niveles, posicionamiento de elementos, actualización de GUI está orquestada por el script `GameManager.js` sirviéndose de las funciones públicas de cada uno de los elementos de juego.
