@@ -3,19 +3,24 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 public class GameManager : MonoBehaviour {
     private int[] bricksPerLevel;
     private int currentLevel = 0;
     private int remainingBricks;
-    private bool gameOver = true;
+    private bool gameLost = false;
+    private bool gameHasStarted = false;
+    private bool gamePaused = false;
     private int currentLifes;
     private int currentScore = 0;
-
-    [Header("Player Settings")]
-    public BallMovement ball;
-    public Racket racket;
+    private bool isLevelChanging = false;
+    private BallMovement ball;
+    private Racket racket;
+    private GameObject brickStartingPoint;
+    private Canvas canvas;
+    private AsyncOperation asyncLoadLevel;
 
     [Header("Bricks Settings")]
     public Sprite[] breakableBrickPics;
@@ -28,34 +33,118 @@ public class GameManager : MonoBehaviour {
 
     [Header("LevelSettings")]
     public int maximumLifes = 3;
-    public GameObject brickStartingPoint;
     public Brick brickPrefab;
     public ArkanoidLevel[] arkanoidLevels;
     public float vBrickOffset;
     public float hBrickOffset;
 
-    [Header("GUI")]
-    public Canvas canvas;
-
     private void Start()
     {
-        this.InitializeVars();
-        this.InitializeLevel(currentLevel);
-        this.InitializeGUI();
+        SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
+    }
+
+    public void StartGame()
+    {
+        this.currentScore = 0;
+        SceneManager.UnloadSceneAsync("Menu");
+        StartCoroutine(AddGameScene());
     }
 
     private void Update()
     {
-        if (this.remainingBricks <= 0 && !this.gameOver && this.currentLevel + 1 < this.arkanoidLevels.Length)
+        if (SceneManager.GetSceneByName("GameScene").isLoaded && this.gameHasStarted)
         {
-            this.currentLevel++;
-            this.InitializeLevel(currentLevel);
-            this.UpdateLevelGUI();
+            if (this.remainingBricks <= 0 && !this.gameLost)
+            {
+                if (this.currentLevel < this.arkanoidLevels.Length - 1)
+                {
+                    if (!isLevelChanging)
+                    {
+                        this.currentLevel++;
+                        StartCoroutine(InitializeLevelCoroutine(1, this.currentLevel));
+                    }
+                }
+                else if (!this.gamePaused)
+                {
+                    this.GameWon();
+                }
+            }
+            else if (this.gameLost && !this.gamePaused)
+            {
+                this.GameLost();
+            }
         }
     }
 
+    public void GameLost()
+    {
+        this.PauseGame();
+        this.ShowLostMessageGUI();
+    }
+
+    public void GameWon()
+    {
+        this.PauseGame();
+        this.ShowWonMessageGUI();
+    }
+
+    public void ShowLostMessageGUI()
+    {
+        GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
+        GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
+        Debug.Log(pauseMenu);
+        pauseMenu.SetActive(true);
+        gameOverMenu.SetActive(true);
+
+        Debug.Log(gameOverMenu.transform.Find("LostText"));
+        Debug.Log(gameOverMenu.transform.Find("LostText").gameObject);
+        GameObject lostText = gameOverMenu.transform.Find("LostText").gameObject;
+        Debug.Log(lostText);
+
+        GameObject wonText = gameOverMenu.transform.Find("WonText").gameObject;
+        Debug.Log(wonText);
+
+        wonText.SetActive(false);
+        lostText.SetActive(true);
+    }
+    public void ShowWonMessageGUI()
+    {
+        GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
+        GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
+        Debug.Log(pauseMenu);
+        pauseMenu.SetActive(true);
+        gameOverMenu.SetActive(true);
+
+        Debug.Log(gameOverMenu.transform.Find("LostText"));
+        Debug.Log(gameOverMenu.transform.Find("LostText").gameObject);
+        GameObject lostText = gameOverMenu.transform.Find("LostText").gameObject;
+        Debug.Log(lostText);
+
+        GameObject wonText = gameOverMenu.transform.Find("WonText").gameObject;
+        Debug.Log(wonText);
+
+        lostText.SetActive(false);
+        wonText.SetActive(true);
+    }
+
+    public void BackToMainMenu()
+    {
+
+        SceneManager.UnloadSceneAsync("GameScene");
+        StartCoroutine(AddMenuScene());
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.UnloadSceneAsync("GameScene");
+        this.currentScore = 0;
+        StartCoroutine(AddGameScene());
+    }
+
+
     public void LifeLost()
     {
+        Debug.Log("LifeLost");
         this.currentLifes--;
         if (currentLifes > 0)
         {
@@ -63,12 +152,32 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            this.gameOver = true;
+            Debug.Log("gameLost");
+            this.gameLost = true;
         }
 
         this.LifeLostGUI();
     }
 
+    IEnumerator AddGameScene()
+    {
+        asyncLoadLevel = SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
+
+        while (!asyncLoadLevel.isDone) { yield return null; }
+
+        this.InitializeVars();
+        this.InitializeLevel(currentLevel);
+        this.InitializeGUI();
+
+        this.gameHasStarted = true;
+    }
+
+    IEnumerator AddMenuScene()
+    {
+        asyncLoadLevel = SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
+
+        while (!asyncLoadLevel.isDone) { yield return null; }
+    }
 
     IEnumerator ActivateBall()
     {
@@ -78,11 +187,35 @@ public class GameManager : MonoBehaviour {
         this.ResetBall();
     }
 
+    IEnumerator ShowLevelMessageGUICoroutine(float seconds)
+    {
+        this.PauseGame();
+        this.ShowLevelMessageGUI();
+
+        yield return new WaitForSeconds(seconds);
+
+        this.HideLevelMessageGUI();
+        this.ResumeGame();
+
+    }
+
+    IEnumerator InitializeLevelCoroutine(float seconds, int level)
+    {
+        this.isLevelChanging = true;
+        this.PauseGame();
+
+        yield return new WaitForSeconds(seconds);
+
+        this.InitializeLevel(level);
+        this.UpdateLevelGUI();
+        this.isLevelChanging = false;
+        this.gamePaused = false;
+    }
+
     public void BrickDestroyed(Transform brickTransform, int durability) {
         this.remainingBricks--;
         this.currentScore += 100 * durability;
         this.UpdateScoreGUI();
-        Debug.Log(currentScore);
         if (UnityEngine.Random.Range(0f, 1f) < capsuleDropProbability)
         {
             int weightSum = 0;
@@ -130,6 +263,10 @@ public class GameManager : MonoBehaviour {
         }
 
         this.remainingBricks = this.bricksPerLevel[levelNumber];
+
+        
+
+        StartCoroutine(ShowLevelMessageGUICoroutine(1));
     }
 
     private void InstantiateBrick(char brickChar, Vector3 position, int levelNumber, GameObject parent) {
@@ -178,8 +315,12 @@ public class GameManager : MonoBehaviour {
 
     private void InitializeVars()
     {
+        this.ball = GameObject.FindWithTag("Ball").GetComponent<BallMovement>();
+        this.racket = GameObject.FindWithTag("Player").GetComponent<Racket>();
+        this.brickStartingPoint = GameObject.Find("BrickStartingPoint");
+        this.canvas = GameObject.Find("GameCanvas").GetComponent<Canvas>();
         this.bricksPerLevel = new int[arkanoidLevels.Length];
-        this.gameOver = false;
+        this.gameLost = false;
         this.currentLifes = maximumLifes;
     }
 
@@ -222,6 +363,23 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    private void ShowLevelMessageGUI()
+    {
+        GameObject messageGroup = this.canvas.gameObject.transform.Find("Message").gameObject;
+        GameObject message = messageGroup.transform.Find("MessageValue").gameObject;
+
+        message.GetComponent<TMPro.TextMeshProUGUI>().text = "Welcome to\nLevel " + (this.currentLevel + 1);
+        messageGroup.SetActive(true);
+    }
+
+    private void HideLevelMessageGUI()
+    {
+        GameObject messageGroup = this.canvas.gameObject.transform.Find("Message").gameObject;
+        GameObject message = messageGroup.transform.Find("MessageValue").gameObject;
+
+        messageGroup.SetActive(false);
+    }
+
     private void CleanBricks()
     {
         Brick[] bricks = GameObject.FindObjectsOfType(typeof(Brick)) as Brick[];
@@ -255,5 +413,21 @@ public class GameManager : MonoBehaviour {
         this.CleanCapsules();
         this.ResetRacket();
         this.ResetBall();
+    }
+
+    private void ResumeGame() {
+        this.racket.GetComponent<CharacterMovement>().SetMove(true);
+        if (this.ball.gameObject.transform.parent == null)
+        {
+            this.ball.GetComponent<BallMovement>().SetMove(true);
+        }
+        this.gamePaused = false;
+    }
+
+    private void PauseGame()
+    {
+        this.gamePaused = true;
+        this.racket.GetComponent<CharacterMovement>().SetMove(false);
+        this.ball.GetComponent<BallMovement>().SetMove(false);
     }
 }

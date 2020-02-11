@@ -8,9 +8,6 @@ public class GameManagerEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("ball"), true);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("racket"), true);
-
         EditorList.Show(serializedObject.FindProperty("breakableBrickPics"), EditorListOption.ListLabel | EditorListOption.Buttons);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("unbreakableBrickPic"), true);
 
@@ -19,7 +16,6 @@ public class GameManagerEditor : Editor
 
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("maximumLifes"), true);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("brickStartingPoint"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("brickPrefab"), true);
         string arkanoidLevelsHelpBox = "" +
             "This is a text-based level definition. Each line represents an Arkanoid line. For each line only 10 first chars will be taken into account." +
@@ -28,7 +24,6 @@ public class GameManagerEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("vBrickOffset"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("hBrickOffset"), true);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("canvas"), true);
         serializedObject.ApplyModifiedProperties();
     }
 }

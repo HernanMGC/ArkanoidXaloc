@@ -12,6 +12,7 @@ public class CharacterMovement : MonoBehaviour
 
     public Vector2 iniSpeed;
     public GameObject ball;
+    private bool canMove = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,24 +21,25 @@ public class CharacterMovement : MonoBehaviour
 
         this.ResetSpeed();
         this.InitializeBoundaries();
-
-        Debug.Log(characterCollider);
     }
 
     //Update is called once per frame
 
     void FixedUpdate()
     {
-        // Get Horizontal Input
-        float hMove = Input.GetAxisRaw("Horizontal");
-
-        Vector2 currentPosition = new Vector2(Mathf.Clamp(this.transform.position.x, boundaryLeft, boundaryRight), this.transform.position.y);
-        Vector2 newPosition = currentPosition + this.currentSpeed * hMove * Time.fixedDeltaTime;
-        this.transform.position = newPosition;
-
-        if (Input.GetAxisRaw("Jump") > 0)
+        if (this.canMove)
         {
-            this.PlayBall();
+            // Get Horizontal Input
+            float hMove = Input.GetAxisRaw("Horizontal");
+
+            Vector2 currentPosition = new Vector2(Mathf.Clamp(this.transform.position.x, boundaryLeft, boundaryRight), this.transform.position.y);
+            Vector2 newPosition = currentPosition + this.currentSpeed * hMove * Time.fixedDeltaTime;
+            this.transform.position = newPosition;
+
+            if (Input.GetAxisRaw("Jump") > 0)
+            {
+                this.PlayBall();
+            }
         }
     }
 
@@ -48,7 +50,7 @@ public class CharacterMovement : MonoBehaviour
         return;
     }
 
-    private void InitializeBoundaries()
+    public void InitializeBoundaries()
     {
         RaycastHit2D hitLeft = Physics2D.Raycast(this.transform.position, Vector2.left, Mathf.Infinity);
         RaycastHit2D hitRight = Physics2D.Raycast(this.transform.position, Vector2.right, Mathf.Infinity);
@@ -77,17 +79,21 @@ public class CharacterMovement : MonoBehaviour
         return;
     }
 
-    internal void AttachBall(GameObject ball)
+    public void AttachBall(GameObject ball)
     {
-        Debug.Log("AttachBall");
         this.ball = ball;
         
         ball.transform.parent = this.gameObject.transform.Find("BallStartingPoint").transform;
     }
 
-    internal void PlayBall()
+    public void PlayBall()
     {
         this.ball.transform.parent = null;
         this.ball.GetComponent<BallMovement>().PlayBall();
+    }
+
+    public void SetMove(bool moveState)
+    {
+        this.canMove = moveState;
     }
 }
