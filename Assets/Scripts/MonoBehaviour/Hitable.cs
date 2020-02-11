@@ -15,6 +15,7 @@ public abstract class Hitable : MonoBehaviour
     }
 
     public HitableReaction hitableReaction;
+    public AudioClip destroyClip;
 
     public virtual void Hit(GameObject go) { }
 }

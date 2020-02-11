@@ -13,6 +13,7 @@ public class CharacterMovement : MonoBehaviour
     public Vector2 iniSpeed;
     public GameObject ball;
     private bool canMove = false;
+    public AudioClip shootClip;
 
     // Start is called before the first frame update
     void Start()
@@ -90,6 +91,7 @@ public class CharacterMovement : MonoBehaviour
     {
         this.ball.transform.parent = null;
         this.ball.GetComponent<BallMovement>().PlayBall();
+        AudioManager.instance.PlaySingle(this.shootClip);
     }
 
     public void SetMove(bool moveState)

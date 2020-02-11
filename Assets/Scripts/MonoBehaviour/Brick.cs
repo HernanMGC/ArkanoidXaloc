@@ -25,6 +25,7 @@ public class Brick : Hitable
 
                 if (this.currentDurability == 0) {
                     this.gameManager.GetComponent<GameManager>().BrickDestroyed(brickTransform, this.durability);
+                    AudioManager.instance.PlaySingle(this.destroyClip);
                     Destroy(this.gameObject);
                 }
                 break;
