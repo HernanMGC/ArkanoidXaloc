@@ -19,11 +19,11 @@ En esta prueba de programación se ha desarrollado un clon del juego Arkanoid en
 
 -   Cápsulas modificadoras de cuatro tipos: aumento y disminución de velocidad de bola, aumento y disminición del tamaño de la pala.
 
-El tiempo total dedicado ha sido aproximadamente de 9 horas. El detalle de el tiempo de desarrollo para cada parte puede verse en el siguiente desglose:
+El tiempo total dedicado ha sido aproximadamente de 11,5 horas. El detalle de el tiempo de desarrollo para cada parte puede verse en el siguiente desglose:
 
--   **[Bola](#ball):** 0.5 horas.
+-   **[Bola](#ball):** 0,5 horas.
 
--   **[Pala](#racket):** 0.5 horas.
+-   **[Pala](#racket):** 0,5 horas.
 
 -   **[Ladrillos](#bricks):** 1 hora.
 
@@ -35,11 +35,13 @@ El tiempo total dedicado ha sido aproximadamente de 9 horas. El detalle de el ti
 
     -   **Flujo de juego:** 2 hora.
 
-    -   **Puntuaciones:** 0.5 horas.
+    -   **Puntuaciones:** 0,5 horas.
 
-    -   **GUI:** 0.5 horas.
+    -   **GUI:** 0,5 horas.
 
--   **Memoria:** 1 horas.
+-   **Menús y manejo de escenas:** 2 horas.
+
+-   **Memoria:** 1,5 horas.
 
 Puede encontrarse el código descargable en el siguiente repositorio: <https://github.com/HernanMGC/ArkanoidXaloc>.
 
