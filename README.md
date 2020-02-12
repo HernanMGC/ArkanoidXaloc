@@ -19,7 +19,7 @@ En esta prueba de programación se ha desarrollado un clon del juego Arkanoid en
 
 -   Cápsulas modificadoras de cuatro tipos: aumento y disminución de velocidad de bola, aumento y disminición del tamaño de la pala.
 
-El tiempo total dedicado ha sido aproximadamente de 11,5 horas. El detalle de el tiempo de desarrollo para cada parte puede verse en el siguiente desglose:
+El tiempo total dedicado ha sido aproximadamente de 13,5 horas. El detalle de el tiempo de desarrollo para cada parte puede verse en el siguiente desglose:
 
 -   **[Bola](#ball):** 0,5 horas.
 
@@ -35,11 +35,13 @@ El tiempo total dedicado ha sido aproximadamente de 11,5 horas. El detalle de el
 
     -   **Flujo de juego:** 2 hora.
 
-    -   **Puntuaciones:** 0,5 horas.
+    -   **Puntuaciones, cálculo y almacenamiento:** 1 horas.
 
     -   **GUI:** 0,5 horas.
 
--   **Menús y manejo de escenas:** 2 horas.
+-   **[Menús y manejo de escenas]{#scenes}:** 2 horas.
+
+-   **[Sonido]{#sound}:** 1 horas.
 
 -   **Memoria:** 1,5 horas.
 
@@ -106,3 +108,17 @@ Se ha modificado el editor de este componente para poder pemitir una gestión m�
 Para cada elemento de una lista se permite duplicar, eliminar y desplazar hacia abajo.
 
 ![Lista de `CapsulePrize`>](/readmeImages/editorList.jpg)
+
+
+<a name="scenes"></a>Menús y manejo de escena
+=====================
+
+Se han establecido tres escenas gestionadas con cargas aditivas enteramente por `GameManager` y son las que se listan a continuación.
+
+-   **Persistent**: Contiene los objetos necesarios en todas las escenas, como `GameManager`, `MainCamera`, `AudioListener` y `AudioManager`.
+-   **Menu:** Contiene el menú principal.
+-   **GameScene:** Contiene los elementos de juego.
+
+<a name="sound"></a>Sonido
+
+Para el desarrollo de la generación y definición de niveles se ha añadido a `AudioManager.js` que mediante dos `AudioSource` controla el sonido de la música de background como los efectos de sonido de cada elemento jugable.
