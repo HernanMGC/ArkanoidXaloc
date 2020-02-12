@@ -39,9 +39,9 @@ El tiempo total dedicado ha sido aproximadamente de 13 horas. El detalle de el t
 
     -   **GUI:** 0,5 horas.
 
--   **[Menús y manejo de escenas]{#scenes}:** 2 horas.
+-   **[Menús y manejo de escenas](#scenes):** 2 horas.
 
--   **[Sonido]{#sound}:** 1 horas.
+-   **[Sonido](#sound):** 1 horas.
 
 -   **Memoria:** 1,5 horas.
 
