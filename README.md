@@ -120,5 +120,6 @@ Se han establecido tres escenas gestionadas con cargas aditivas enteramente por 
 -   **GameScene:** Contiene los elementos de juego.
 
 <a name="sound"></a>Sonido
+========
 
 Para el desarrollo de la generación y definición de niveles se ha añadido a `AudioManager.js` que mediante dos `AudioSource` controla el sonido de la música de background como los efectos de sonido de cada elemento jugable.
