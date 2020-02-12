@@ -146,3 +146,4 @@ MonoBehaviour:
   currentSpeed: {x: 0, y: 1}
   iniSpeed: {x: 0, y: 1}
   initPosition: {fileID: 0}
+  hitClip: {fileID: 8300000, guid: 341dc104b8dbb3f4badee654bc254514, type: 3}

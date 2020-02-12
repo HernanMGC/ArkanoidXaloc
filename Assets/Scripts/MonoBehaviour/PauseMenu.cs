@@ -20,4 +20,9 @@ public class PauseMenu : MonoBehaviour
     {
         this.gameManager.GetComponent<GameManager>().RestartGame();
     }
+
+    public void ResumeGame()
+    {
+        this.gameManager.GetComponent<GameManager>().ResumeGame();
+    }
 }

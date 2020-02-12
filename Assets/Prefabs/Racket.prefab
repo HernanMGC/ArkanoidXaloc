@@ -121,6 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iniSpeed: {x: 1, y: 0}
   ball: {fileID: 0}
+  shootClip: {fileID: 8300000, guid: 341dc104b8dbb3f4badee654bc254514, type: 3}
 --- !u!61 &2927174744487726562
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -144,5 +144,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitableReaction: 0
+  destroyClip: {fileID: 8300000, guid: 9ca20144b332de842bac23035d64a7b8, type: 3}
   durability: 1
   gameManager: {fileID: 0}

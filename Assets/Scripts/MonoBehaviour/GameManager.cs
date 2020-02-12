@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using System;
 
 public class GameManager : MonoBehaviour {
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour {
     public void StartGame()
     {
         this.currentScore = 0;
+        this.currentLevel = 0;
         SceneManager.UnloadSceneAsync("Menu");
         StartCoroutine(AddGameScene());
     }
@@ -73,36 +75,68 @@ public class GameManager : MonoBehaviour {
             {
                 this.GameLost();
             }
+
+            if (Input.GetAxisRaw("Escape") > 0)
+            {
+                this.PauseGame();
+                this.PauseMenuOpenGUI();
+            }
         }
     }
 
     public void GameLost()
     {
+        this.StoreScore();
         this.PauseGame();
         this.ShowLostMessageGUI();
     }
 
     public void GameWon()
     {
+        this.StoreScore();
         this.PauseGame();
         this.ShowWonMessageGUI();
+    }
+
+    private void StoreScore()
+    {
+        int newScore;
+        int oldScore;
+        newScore = this.currentScore;
+        for (int i = 0; i < 10; i++)
+        {
+            if (PlayerPrefs.HasKey(i + "HScore"))
+            {
+                if (PlayerPrefs.GetInt(i + "HScore") < newScore)
+                {
+                    oldScore = PlayerPrefs.GetInt(i + "HScore");
+                    PlayerPrefs.SetInt(i + "HScore", newScore);
+                    newScore = oldScore;
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetInt(i + "HScore", newScore);
+                newScore = 0;
+            }
+        }
     }
 
     public void ShowLostMessageGUI()
     {
         GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
         GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
-        Debug.Log(pauseMenu);
+        GameObject backToMainMenuMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("BackToMainMenuMenu").gameObject;
         pauseMenu.SetActive(true);
         gameOverMenu.SetActive(true);
+        backToMainMenuMenu.SetActive(false);
 
-        Debug.Log(gameOverMenu.transform.Find("LostText"));
-        Debug.Log(gameOverMenu.transform.Find("LostText").gameObject);
         GameObject lostText = gameOverMenu.transform.Find("LostText").gameObject;
-        Debug.Log(lostText);
-
         GameObject wonText = gameOverMenu.transform.Find("WonText").gameObject;
-        Debug.Log(wonText);
+
+        GameObject yesButton = gameOverMenu.transform.Find("YesButton").gameObject;
+
+        EventSystem.current.SetSelectedGameObject(yesButton);
 
         wonText.SetActive(false);
         lostText.SetActive(true);
@@ -111,20 +145,44 @@ public class GameManager : MonoBehaviour {
     {
         GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
         GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
-        Debug.Log(pauseMenu);
+        GameObject backToMainMenuMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("BackToMainMenuMenu").gameObject;
         pauseMenu.SetActive(true);
         gameOverMenu.SetActive(true);
+        backToMainMenuMenu.SetActive(false);
 
-        Debug.Log(gameOverMenu.transform.Find("LostText"));
-        Debug.Log(gameOverMenu.transform.Find("LostText").gameObject);
         GameObject lostText = gameOverMenu.transform.Find("LostText").gameObject;
-        Debug.Log(lostText);
-
         GameObject wonText = gameOverMenu.transform.Find("WonText").gameObject;
-        Debug.Log(wonText);
+
+        GameObject yesButton = gameOverMenu.transform.Find("YesButton").gameObject;
+
+        EventSystem.current.SetSelectedGameObject(yesButton);
 
         lostText.SetActive(false);
         wonText.SetActive(true);
+    }
+
+    public void PauseMenuOpenGUI()
+    {
+        GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
+        GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
+        GameObject backToMainMenuMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("BackToMainMenuMenu").gameObject;
+        pauseMenu.SetActive(true);
+        backToMainMenuMenu.SetActive(true);
+        gameOverMenu.SetActive(false);
+
+        GameObject yesButton = backToMainMenuMenu.transform.Find("YesButton").gameObject;
+
+        EventSystem.current.SetSelectedGameObject(yesButton);
+    }
+
+    public void HidePauseMenuGUI()
+    {
+        GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
+        GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
+        GameObject backToMainMenuMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("BackToMainMenuMenu").gameObject;
+        pauseMenu.SetActive(false);
+        backToMainMenuMenu.SetActive(false);
+        gameOverMenu.SetActive(false);
     }
 
     public void BackToMainMenu()
@@ -138,21 +196,20 @@ public class GameManager : MonoBehaviour {
     {
         SceneManager.UnloadSceneAsync("GameScene");
         this.currentScore = 0;
+        this.currentLevel = 0;
         StartCoroutine(AddGameScene());
     }
 
 
     public void LifeLost()
     {
-        Debug.Log("LifeLost");
         this.currentLifes--;
         if (currentLifes > 0)
         {
-            StartCoroutine(this.ActivateBall());
+            StartCoroutine("ActivateBall");
         }
         else
         {
-            Debug.Log("gameLost");
             this.gameLost = true;
         }
 
@@ -400,8 +457,14 @@ public class GameManager : MonoBehaviour {
     }
 
     private void ResetBall() {
-        this.ball.GetComponent<BallMovement>().ResetBall();
-        this.racket.GetComponent<CharacterMovement>().AttachBall(this.ball.gameObject);
+        if (ball != null)
+        {
+            this.ball.GetComponent<BallMovement>().ResetBall();
+        }
+        if (racket != null)
+        {
+            this.racket.GetComponent<CharacterMovement>().AttachBall(this.ball.gameObject);
+        }
     }
     private void ResetRacket()
     {
@@ -415,13 +478,20 @@ public class GameManager : MonoBehaviour {
         this.ResetBall();
     }
 
-    private void ResumeGame() {
+    public void ResumeGame() {
         this.racket.GetComponent<CharacterMovement>().SetMove(true);
         if (this.ball.gameObject.transform.parent == null)
         {
             this.ball.GetComponent<BallMovement>().SetMove(true);
         }
+        Capsule[] allCapsules = UnityEngine.Object.FindObjectsOfType<Capsule>();
+        foreach (Capsule capsule in allCapsules)
+        {
+            capsule.SetMove(true);
+        }
         this.gamePaused = false;
+
+        this.HidePauseMenuGUI();
     }
 
     private void PauseGame()
@@ -429,5 +499,10 @@ public class GameManager : MonoBehaviour {
         this.gamePaused = true;
         this.racket.GetComponent<CharacterMovement>().SetMove(false);
         this.ball.GetComponent<BallMovement>().SetMove(false);
+        Capsule[] allCapsules = UnityEngine.Object.FindObjectsOfType<Capsule>();
+        foreach (Capsule capsule in allCapsules)
+        {
+            capsule.SetMove(false);
+        }
     }
 }

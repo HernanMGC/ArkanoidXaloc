@@ -7,6 +7,7 @@ public abstract class Capsule : MonoBehaviour
     private readonly float vo = 0.0f;
     private float v;
     private float y;
+    private bool canMove = true;
 
     public float acceleration = 0.001f;
 
@@ -20,8 +21,11 @@ public abstract class Capsule : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        this.v = this.v - this.acceleration * (Time.fixedDeltaTime);
-        this.transform.Translate(0, this.v, 0);
+        if (this.canMove)
+        {
+            this.v = this.v - this.acceleration * (Time.fixedDeltaTime);
+            this.transform.Translate(0, this.v, 0);
+        }
     }
 
     public virtual void ApplyEffect() { }
@@ -37,5 +41,10 @@ public abstract class Capsule : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void SetMove(bool state)
+    {
+        this.canMove = state;
     }
 }

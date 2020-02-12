@@ -13,6 +13,7 @@ public class BallMovement : MonoBehaviour
     public Vector2 currentSpeed;
     public Vector2 iniSpeed;
     public GameObject initPosition;
+    public AudioClip hitClip;
 
 
     // Start is called before the first frame update
@@ -77,6 +78,7 @@ public class BallMovement : MonoBehaviour
         var speed = this.currentSpeed.magnitude;
         Vector2 direction;
 
+        AudioManager.instance.PlaySingle(this.hitClip);
 
         if (collision.gameObject.GetComponent<Brick>() != null)
         {
