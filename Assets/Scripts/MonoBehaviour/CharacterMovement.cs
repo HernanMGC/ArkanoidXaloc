@@ -89,9 +89,12 @@ public class CharacterMovement : MonoBehaviour
 
     public void PlayBall()
     {
-        this.ball.transform.parent = null;
-        this.ball.GetComponent<BallMovement>().PlayBall();
-        AudioManager.instance.PlaySingle(this.shootClip);
+        if (this.ball.transform.parent != null)
+        {
+            this.ball.transform.parent = null;
+            this.ball.GetComponent<BallMovement>().PlayBall();
+            AudioManager.instance.PlaySingle(this.shootClip);
+        }
     }
 
     public void SetMove(bool moveState)

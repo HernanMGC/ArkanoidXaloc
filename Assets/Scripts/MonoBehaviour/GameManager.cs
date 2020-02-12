@@ -86,14 +86,40 @@ public class GameManager : MonoBehaviour {
 
     public void GameLost()
     {
+        this.StoreScore();
         this.PauseGame();
         this.ShowLostMessageGUI();
     }
 
     public void GameWon()
     {
+        this.StoreScore();
         this.PauseGame();
         this.ShowWonMessageGUI();
+    }
+
+    private void StoreScore()
+    {
+        int newScore;
+        int oldScore;
+        newScore = this.currentScore;
+        for (int i = 0; i < 10; i++)
+        {
+            if (PlayerPrefs.HasKey(i + "HScore"))
+            {
+                if (PlayerPrefs.GetInt(i + "HScore") < newScore)
+                {
+                    oldScore = PlayerPrefs.GetInt(i + "HScore");
+                    PlayerPrefs.SetInt(i + "HScore", newScore);
+                    newScore = oldScore;
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetInt(i + "HScore", newScore);
+                newScore = 0;
+            }
+        }
     }
 
     public void ShowLostMessageGUI()
@@ -109,6 +135,8 @@ public class GameManager : MonoBehaviour {
         GameObject wonText = gameOverMenu.transform.Find("WonText").gameObject;
 
         GameObject yesButton = gameOverMenu.transform.Find("YesButton").gameObject;
+
+        EventSystem.current.SetSelectedGameObject(yesButton);
 
         wonText.SetActive(false);
         lostText.SetActive(true);
@@ -175,15 +203,13 @@ public class GameManager : MonoBehaviour {
 
     public void LifeLost()
     {
-        Debug.Log("LifeLost");
         this.currentLifes--;
         if (currentLifes > 0)
         {
-            StartCoroutine(this.ActivateBall());
+            StartCoroutine("ActivateBall");
         }
         else
         {
-            Debug.Log("gameLost");
             this.gameLost = true;
         }
 

@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 67127781}
   - component: {fileID: 67127780}
   m_Layer: 5
-  m_Name: ' '
+  m_Name: YesButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
