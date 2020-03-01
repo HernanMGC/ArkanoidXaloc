@@ -6,6 +6,8 @@ public class MainMenu : MonoBehaviour
 {
     private GameObject gameManager;
 
+    public TMPro.TextMeshProUGUI highscoresText;
+
     private void Start()
     {
         this.gameManager = GameObject.FindWithTag("GameController");
@@ -22,7 +24,6 @@ public class MainMenu : MonoBehaviour
     }
     public void UpdateHighScores()
     {
-        TMPro.TextMeshProUGUI highscoresText = GameObject.Find("HighscoresText").GetComponent<TMPro.TextMeshProUGUI>();
         highscoresText.text = "";
         for (int i = 0; i < 10; i++)
         {

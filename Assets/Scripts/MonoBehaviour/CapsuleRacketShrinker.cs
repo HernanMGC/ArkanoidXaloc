@@ -6,7 +6,8 @@ public class CapsuleRacketShrinker : Capsule
 {
     public override void ApplyEffect()
     {
-        GameObject racket = GameObject.FindGameObjectWithTag("Player");
+        GameManager gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        GameObject racket = gameManager.GetRacketGO();
         if (racket != null)
         {
             racket.GetComponent<Racket>().ShrinkRacket();

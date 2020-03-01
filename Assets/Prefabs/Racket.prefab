@@ -122,6 +122,7 @@ MonoBehaviour:
   iniSpeed: {x: 1, y: 0}
   ball: {fileID: 0}
   shootClip: {fileID: 8300000, guid: 341dc104b8dbb3f4badee654bc254514, type: 3}
+  ballStartingPoint: {fileID: 1529049756403565901}
 --- !u!61 &2927174744487726562
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -161,6 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitableReaction: 3
+  destroyClip: {fileID: 0}
   initialPosition: {x: 0, y: -1, z: 0}
   smallSprite: {fileID: -828367091830175148, guid: 4e1e8ab5b90fd8c4c8df0edf5e4c3790,
     type: 3}

@@ -8,6 +8,10 @@ public class GameManagerEditor : Editor
     {
         serializedObject.Update();
 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("gameSceneName"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("menuSceneName"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("uiManager"), true);
+
         EditorList.Show(serializedObject.FindProperty("breakableBrickPics"), EditorListOption.ListLabel | EditorListOption.Buttons);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("unbreakableBrickPic"), true);
 
