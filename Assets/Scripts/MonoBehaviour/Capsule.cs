@@ -8,6 +8,7 @@ public abstract class Capsule : MonoBehaviour
     private float v;
     private float y;
     private bool canMove = true;
+    private GameManager gameManager;
 
     public float acceleration = 0.001f;
 

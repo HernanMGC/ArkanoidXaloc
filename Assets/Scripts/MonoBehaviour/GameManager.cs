@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 using System;
 
 public class GameManager : MonoBehaviour {
@@ -22,6 +21,12 @@ public class GameManager : MonoBehaviour {
     private GameObject brickStartingPoint;
     private Canvas canvas;
     private AsyncOperation asyncLoadLevel;
+    private List<GameObject> bricks;
+
+    [Header("Scene Settings")]
+    public String gameSceneName;
+    public String menuSceneName;
+    public UIManager uiManager;
 
     [Header("Bricks Settings")]
     public Sprite[] breakableBrickPics;
@@ -41,20 +46,28 @@ public class GameManager : MonoBehaviour {
 
     private void Start()
     {
-        SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
+        if (SceneManager.GetSceneByName(gameSceneName).isLoaded)
+        {
+            SceneManager.UnloadSceneAsync(gameSceneName);
+        }
+
+        if (!SceneManager.GetSceneByName(menuSceneName).isLoaded)
+        {
+            SceneManager.LoadSceneAsync(menuSceneName, LoadSceneMode.Additive);
+        }
     }
 
     public void StartGame()
     {
         this.currentScore = 0;
         this.currentLevel = 0;
-        SceneManager.UnloadSceneAsync("Menu");
+        SceneManager.UnloadSceneAsync(menuSceneName);
         StartCoroutine(AddGameScene());
     }
 
     private void Update()
     {
-        if (SceneManager.GetSceneByName("GameScene").isLoaded && this.gameHasStarted)
+        if (SceneManager.GetSceneByName(gameSceneName).isLoaded && this.gameHasStarted)
         {
             if (this.remainingBricks <= 0 && !this.gameLost)
             {
@@ -124,77 +137,33 @@ public class GameManager : MonoBehaviour {
 
     public void ShowLostMessageGUI()
     {
-        GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
-        GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
-        GameObject backToMainMenuMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("BackToMainMenuMenu").gameObject;
-        pauseMenu.SetActive(true);
-        gameOverMenu.SetActive(true);
-        backToMainMenuMenu.SetActive(false);
-
-        GameObject lostText = gameOverMenu.transform.Find("LostText").gameObject;
-        GameObject wonText = gameOverMenu.transform.Find("WonText").gameObject;
-
-        GameObject yesButton = gameOverMenu.transform.Find("YesButton").gameObject;
-
-        EventSystem.current.SetSelectedGameObject(yesButton);
-
-        wonText.SetActive(false);
-        lostText.SetActive(true);
+        uiManager.ShowLostMessageGUI();
     }
     public void ShowWonMessageGUI()
     {
-        GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
-        GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
-        GameObject backToMainMenuMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("BackToMainMenuMenu").gameObject;
-        pauseMenu.SetActive(true);
-        gameOverMenu.SetActive(true);
-        backToMainMenuMenu.SetActive(false);
-
-        GameObject lostText = gameOverMenu.transform.Find("LostText").gameObject;
-        GameObject wonText = gameOverMenu.transform.Find("WonText").gameObject;
-
-        GameObject yesButton = gameOverMenu.transform.Find("YesButton").gameObject;
-
-        EventSystem.current.SetSelectedGameObject(yesButton);
-
-        lostText.SetActive(false);
-        wonText.SetActive(true);
+        uiManager.ShowWonMessageGUI();
     }
 
     public void PauseMenuOpenGUI()
     {
-        GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
-        GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
-        GameObject backToMainMenuMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("BackToMainMenuMenu").gameObject;
-        pauseMenu.SetActive(true);
-        backToMainMenuMenu.SetActive(true);
-        gameOverMenu.SetActive(false);
-
-        GameObject yesButton = backToMainMenuMenu.transform.Find("YesButton").gameObject;
-
-        EventSystem.current.SetSelectedGameObject(yesButton);
+        uiManager.PauseMenuOpenGUI();
     }
 
     public void HidePauseMenuGUI()
     {
-        GameObject pauseMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject;
-        GameObject gameOverMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("GameOverMenu").gameObject;
-        GameObject backToMainMenuMenu = this.canvas.gameObject.transform.Find("PauseMenu").gameObject.transform.Find("BackToMainMenuMenu").gameObject;
-        pauseMenu.SetActive(false);
-        backToMainMenuMenu.SetActive(false);
-        gameOverMenu.SetActive(false);
+        uiManager.HidePauseMenuGUI();
     }
 
     public void BackToMainMenu()
     {
 
-        SceneManager.UnloadSceneAsync("GameScene");
+        SceneManager.UnloadSceneAsync(gameSceneName);
         StartCoroutine(AddMenuScene());
     }
 
     public void RestartGame()
     {
-        SceneManager.UnloadSceneAsync("GameScene");
+        SceneManager.UnloadSceneAsync(gameSceneName);
         this.currentScore = 0;
         this.currentLevel = 0;
         StartCoroutine(AddGameScene());
@@ -218,7 +187,7 @@ public class GameManager : MonoBehaviour {
 
     IEnumerator AddGameScene()
     {
-        asyncLoadLevel = SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
+        asyncLoadLevel = SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Additive);
 
         while (!asyncLoadLevel.isDone) { yield return null; }
 
@@ -231,7 +200,7 @@ public class GameManager : MonoBehaviour {
 
     IEnumerator AddMenuScene()
     {
-        asyncLoadLevel = SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Additive);
+        asyncLoadLevel = SceneManager.LoadSceneAsync(menuSceneName, LoadSceneMode.Additive);
 
         while (!asyncLoadLevel.isDone) { yield return null; }
     }
@@ -329,6 +298,8 @@ public class GameManager : MonoBehaviour {
     private void InstantiateBrick(char brickChar, Vector3 position, int levelNumber, GameObject parent) {
         GameObject go;
 
+        this.bricks = new List<GameObject>();
+
         switch (brickChar)
         {
             case 'U':
@@ -336,6 +307,7 @@ public class GameManager : MonoBehaviour {
                 go.GetComponent<Brick>().hitableReaction = Hitable.HitableReaction.DoNothing;
                 go.GetComponent<SpriteRenderer>().sprite = this.unbreakableBrickPic;
                 go.SetActive(true);
+                this.bricks.Add(go);
                 break;
 
             case '1':
@@ -345,6 +317,7 @@ public class GameManager : MonoBehaviour {
                 go.GetComponent<SpriteRenderer>().sprite = this.breakableBrickPics[Mathf.Min(0, this.breakableBrickPics.Length - 1)];
                 go.SetActive(true);
                 this.bricksPerLevel[levelNumber]++;
+                this.bricks.Add(go);
                 break;
 
             case '2':
@@ -354,6 +327,7 @@ public class GameManager : MonoBehaviour {
                 go.GetComponent<SpriteRenderer>().sprite = this.breakableBrickPics[Mathf.Min(1, this.breakableBrickPics.Length - 1)];
                 go.SetActive(true);
                 this.bricksPerLevel[levelNumber]++;
+                this.bricks.Add(go);
                 break;
 
             case '3':
@@ -363,6 +337,7 @@ public class GameManager : MonoBehaviour {
                 go.GetComponent<SpriteRenderer>().sprite = this.breakableBrickPics[Mathf.Min(2, this.breakableBrickPics.Length - 1)];
                 go.SetActive(true);
                 this.bricksPerLevel[levelNumber]++;
+                this.bricks.Add(go);
                 break;
 
             default:
@@ -375,7 +350,7 @@ public class GameManager : MonoBehaviour {
         this.ball = GameObject.FindWithTag("Ball").GetComponent<BallMovement>();
         this.racket = GameObject.FindWithTag("Player").GetComponent<Racket>();
         this.brickStartingPoint = GameObject.Find("BrickStartingPoint");
-        this.canvas = GameObject.Find("GameCanvas").GetComponent<Canvas>();
+        uiManager.InitializeVars();
         this.bricksPerLevel = new int[arkanoidLevels.Length];
         this.gameLost = false;
         this.currentLifes = maximumLifes;
@@ -383,69 +358,45 @@ public class GameManager : MonoBehaviour {
 
     private void InitializeGUI()
     {
-        GameObject lifeGroup = this.canvas.gameObject.transform.Find("Lifes").gameObject;
-        GameObject life = lifeGroup.transform.Find("Life").gameObject;
-
-        for (int i = 1; i < this.maximumLifes; i++)
-        {
-            GameObject newLife = Instantiate(life, lifeGroup.transform) as GameObject;
-            newLife.transform.localPosition += new Vector3((newLife.GetComponent<RectTransform>().rect.width + 10) * i, 0, 0);
-        }
-
-        this.UpdateLevelGUI();
-        this.UpdateScoreGUI();
+        uiManager.InitializeGUI(this.maximumLifes, this.currentLevel, this.currentScore);
     }
 
     private void UpdateLevelGUI()
     {
-        GameObject levelGroup = this.canvas.gameObject.transform.Find("Level").gameObject;
-        GameObject level = levelGroup.transform.Find("LevelValue").gameObject;
-        level.GetComponent<TMPro.TextMeshProUGUI>().text = (this.currentLevel + 1).ToString();
+        uiManager.UpdateLevelGUI(this.currentLevel);
     }
 
     private void UpdateScoreGUI()
     {
-        GameObject scoreGroup = this.canvas.gameObject.transform.Find("Score").gameObject;
-        GameObject score = scoreGroup.transform.Find("ScoreValue").gameObject;
-        string format = "0000000000";
-        score.GetComponent<TMPro.TextMeshProUGUI>().text = (this.currentScore).ToString(format);
+        uiManager.UpdateScoreGUI(this.currentScore);
     }
 
     private void LifeLostGUI()
     {
-        GameObject lifeGroup = this.canvas.gameObject.transform.Find("Lifes").gameObject;
-
-        if (this.currentLifes >= 0) {
-            Destroy(lifeGroup.transform.GetChild(this.currentLifes).gameObject);
-        }
+        uiManager.LifeLostGUI(this.currentLifes);
     }
 
     private void ShowLevelMessageGUI()
     {
-        GameObject messageGroup = this.canvas.gameObject.transform.Find("Message").gameObject;
-        GameObject message = messageGroup.transform.Find("MessageValue").gameObject;
-
-        message.GetComponent<TMPro.TextMeshProUGUI>().text = "Welcome to\nLevel " + (this.currentLevel + 1);
-        messageGroup.SetActive(true);
+        uiManager.ShowLevelMessageGUI(this.currentLevel);
     }
 
     private void HideLevelMessageGUI()
     {
-        GameObject messageGroup = this.canvas.gameObject.transform.Find("Message").gameObject;
-        GameObject message = messageGroup.transform.Find("MessageValue").gameObject;
-
-        messageGroup.SetActive(false);
+        uiManager.HideLevelMessageGUI();
     }
 
     private void CleanBricks()
     {
-        Brick[] bricks = GameObject.FindObjectsOfType(typeof(Brick)) as Brick[];
-
-        foreach (Brick brick in bricks)
+        if (bricks != null)
         {
-            Destroy(brick.gameObject);
+            foreach (GameObject brick in bricks)
+            {
+                Destroy(brick.gameObject);
+            }
         }
     }
+
     private void CleanCapsules()
     {
         Capsule[] capsules = GameObject.FindObjectsOfType(typeof(Capsule)) as Capsule[];
@@ -504,5 +455,16 @@ public class GameManager : MonoBehaviour {
         {
             capsule.SetMove(false);
         }
+    }
+
+    public GameObject GetRacketGO()
+    {
+        return this.racket.gameObject;
+    }
+
+
+    public GameObject GetBallGO()
+    {
+        return this.ball.gameObject;
     }
 }

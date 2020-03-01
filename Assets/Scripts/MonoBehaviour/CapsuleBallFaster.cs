@@ -5,7 +5,8 @@ using UnityEngine;
 public class CapsuleBallFaster : Capsule
 {
     public override void ApplyEffect() {
-        GameObject ball = GameObject.FindGameObjectWithTag("Ball");
+        GameManager gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        GameObject ball = gameManager.GetBallGO();
         if (ball != null) {
            ball.GetComponent<BallMovement>().IncrementSpeed();
         }

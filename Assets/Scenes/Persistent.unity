@@ -452,6 +452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1849404980}
   - component: {fileID: 1849404979}
+  - component: {fileID: 1849404981}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameController
@@ -471,6 +472,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bdcb38c0769cda439e94c5f73a19c3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameSceneName: GameScene
+  menuSceneName: Menu
+  uiManager: {fileID: 1849404981}
   breakableBrickPics:
   - {fileID: 5356303617710117435, guid: 4e1e8ab5b90fd8c4c8df0edf5e4c3790, type: 3}
   - {fileID: -4985825441391629385, guid: 4e1e8ab5b90fd8c4c8df0edf5e4c3790, type: 3}
@@ -519,6 +523,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1849404981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849404978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a538a5b0712ddfb44921f55c05848ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2146098033
 GameObject:
   m_ObjectHideFlags: 0

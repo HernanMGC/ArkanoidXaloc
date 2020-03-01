@@ -14,6 +14,7 @@ public class CharacterMovement : MonoBehaviour
     public GameObject ball;
     private bool canMove = false;
     public AudioClip shootClip;
+    public GameObject ballStartingPoint;
 
     // Start is called before the first frame update
     void Start()
@@ -84,7 +85,7 @@ public class CharacterMovement : MonoBehaviour
     {
         this.ball = ball;
         
-        ball.transform.parent = this.gameObject.transform.Find("BallStartingPoint").transform;
+        ball.transform.parent = this.ballStartingPoint.transform;
     }
 
     public void PlayBall()
